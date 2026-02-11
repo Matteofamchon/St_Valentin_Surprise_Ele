@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>St Valentin 💝</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff6b9d 0%, #ffc3e1 50%, #ff6b9d 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 60px 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            position: relative;
+        }
+
+        h1 {
+            color: #ff1744;
+            font-size: 2.5em;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .heart {
+            color: #ff1744;
+            font-size: 3em;
+            margin-bottom: 20px;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+            position: relative;
+            min-height: 60px;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: bold;
+        }
+
+        #yesBtn {
+            background: linear-gradient(135deg, #ff1744 0%, #ff6b9d 100%);
+            color: white;
+        }
+
+        #yesBtn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(255, 23, 68, 0.4);
+        }
+
+        #noBtn {
+            background: linear-gradient(135deg, #9e9e9e 0%, #bdbdbd 100%);
+            color: white;
+            position: absolute;
+        }
+
+        .fireworks-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .fireworks-container.active {
+            display: block;
+        }
+
+        .celebration {
+            display: none;
+            text-align: center;
+        }
+
+        .celebration.active {
+            display: block;
+            animation: fadeIn 1s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .celebration h2 {
+            color: #ff1744;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .celebration-gif {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 20px;
+            margin-top: 20px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="question">
+            <div class="heart">❤️</div>
+            <h1>Elé, veux-tu être ma Valentine?</h1>
+            <div class="buttons">
+                <button id="yesBtn">Oui! 💕</button>
+                <button id="noBtn">Non</button>
+            </div>
+        </div>
+
+        <div class="celebration" id="celebration">
+            <h2>Trop cooool! ❤️</h2>
+            <p style="font-size: 1.3em; color: #666; margin: 20px 0;">Tu es donc invitée au Kasteelhof samedi 14/02/26 au 8 Rue Saint-Nicolas à Cassel !! <3</p>
+            <img src="https://media.giphy.com/media/26u4cqiYI30juCOGY/giphy.gif" 
+                 alt="Romantic celebration" 
+                 class="celebration-gif"
+                 onerror="this.src='https://media.giphy.com/media/xUOxeZy95ag3Z21G1O/giphy.gif'">
+        </div>
+    </div>
+
+    <div class="fireworks-container" id="fireworksContainer"></div>
+
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const question = document.getElementById('question');
+        const celebration = document.getElementById('celebration');
+        const fireworksContainer = document.getElementById('fireworksContainer');
+
+        // Fonction pour faire bouger le bouton "Non"
+        function moveNoButton() {
+            const container = document.querySelector('.container');
+            const containerRect = container.getBoundingClientRect();
+            const btnRect = noBtn.getBoundingClientRect();
+            
+            const maxX = containerRect.width - btnRect.width - 80;
+            const maxY = 150;
+            
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+            
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+        }
+
+        // Détecter quand la souris s'approche du bouton "Non"
+        noBtn.addEventListener('mouseenter', moveNoButton);
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            moveNoButton();
+        });
+
+        // Position initiale aléatoire du bouton "Non"
+        moveNoButton();
+
+        // Fonction pour créer des feux d'artifice
+        function createFireworks() {
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const firework = document.createElement('div');
+                    firework.style.position = 'absolute';
+                    firework.style.left = Math.random() * 100 + '%';
+                    firework.style.top = Math.random() * 100 + '%';
+                    firework.style.width = '10px';
+                    firework.style.height = '10px';
+                    firework.style.borderRadius = '50%';
+                    firework.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                    firework.style.animation = 'explode 1s ease-out forwards';
+                    fireworksContainer.appendChild(firework);
+
+                    setTimeout(() => firework.remove(), 1000);
+                }, i * 50);
+            }
+        }
+
+        // Ajouter l'animation CSS pour les feux d'artifice
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes explode {
+                0% {
+                    transform: scale(0);
+                    opacity: 1;
+                }
+                100% {
+                    transform: scale(20);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Quand on clique sur "Oui"
+        yesBtn.addEventListener('click', () => {
+            question.classList.add('hidden');
+            celebration.classList.add('active');
+            fireworksContainer.classList.add('active');
+            
+            // Lancer les feux d'artifice
+            createFireworks();
+            setTimeout(createFireworks, 1500);
+            setTimeout(createFireworks, 3000);
+        });
+    </script>
+</body>
+</html>
